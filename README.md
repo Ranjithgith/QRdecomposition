@@ -25,33 +25,52 @@ To implement QR decomposition algorithm using the Gram-Schmidt method.
 ### Gram-Schmidt Method
 ```
 
-''' 
+
+
+'''
 Program to QR decomposition using the Gram-Schmidt method
-Developed by: RANJITH  R
+Developed by: RANJITH R
 RegisterNumber: 212224240131
 '''
+import os
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+
 import numpy as np
 
-def qr_gram_schmidt(A):
-    A = np.array(A, dtype=float)
-    m, n = A.shape
-    Q = np.zeros((m, n))
-    R = np.zeros((n, n))
+def QR_Decomposition(A):
+    n, m = A.shape
 
-    for j in range(n):
-        v = A[:, j]  
-        for i in range(j):
-            R[i, j] = np.dot(Q[:, i], A[:, j])
-            v = v - R[i, j] * Q[:, i]
-        R[j, j] = np.linalg.norm(v)
-        Q[:, j] = v / R[j, j]
+    Q = np.empty((n, n))
+    u = np.empty((n, n))
 
-    return Q, R
-matrix = [[1, 1, 0], [1, 0, 1], [0, 1, 1]]
-Q, R = qr_gram_schmidt(matrix)
+    u[:, 0] = A[:, 0]
+    Q[:, 0] = u[:, 0] / np.linalg.norm(u[:, 0])
 
-print("The Q Matrix is\n", Q)
-print("The R Matrix is\n", R)
+    for i in range(1, n):
+        u[:, i] = A[:, i]
+
+        for j in range(i):
+            u[:, i] -= (A[:, i] @ Q[:, j]) * Q[:, j]
+
+        Q[:, i] = u[:, i] / np.linalg.norm(u[:, i])
+
+    R = np.zeros((n, m))
+
+    for i in range(n):
+        for j in range(i, n):
+            R[i, j] = A[:, j] @ Q[:, i]
+
+    print("The Q Matrix is");
+    print("",Q);
+
+    print("The R Matrix is")
+    print("",R);
+
+a = np.array(eval(input()), dtype=float)
+QR_Decomposition(a)
+
+
+
 
 
 
@@ -60,10 +79,8 @@ print("The R Matrix is\n", R)
 ```
 
 ## Output
-=
-<img width="1089" height="766" alt="image" src="https://github.com/user-attachments/assets/57326072-ec36-4388-81df-ddc50bcd5322" />
 
-
+<img width="1322" height="1007" alt="image" src="https://github.com/user-attachments/assets/0474bcb4-2437-45fa-9e93-4c5e687aa8c1" />
 
 ## Result
 Thus the QR decomposition algorithm using the Gram-Schmidt process is written and verified the result.
